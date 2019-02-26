@@ -1,9 +1,8 @@
 #!/bin/bash
 #--------------------------------------#
-# SHIMON - SIMON - GENIUS(BR) FOR BASH #	 
-# CREATED BY: maik.alberto@hotmail.com #				
+# SHIMON - SIMON - GENIUS(BR) FOR BASH #
+# CREATED BY: maik.alberto@hotmail.com #
 #--------------------------------------#
-
 
 A=$(tput setaf 1)
 B=$(tput setaf 2)
@@ -12,6 +11,7 @@ D=$(tput setaf 4)
 N=$(tput setaf 7)
 
 setas(){
+clear
 cat <<EOM
                      $1.
                    .:;:.
