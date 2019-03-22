@@ -71,47 +71,53 @@ $4                   $BOT
 $N
 "
 }
+trap ctrl_c INT
+
+ctrl_c(){
+ stty sane
+ echo Score: $p
+ exit 1;
+}
 
 A(){ #cima
- setas "${CYAN}" "${N}" "${N}" "${N}"
+	setas "${CYAN}" "${N}" "${N}" "${N}"
 }
 B(){ #baixo
- setas "${N}" "${N}" "${N}" "${YELLOW}"
+	setas "${N}" "${N}" "${N}" "${YELLOW}"
 }
 C(){ #direita
- setas "${N}" "${N}" "${GREEN}" "${N}"
+	setas "${N}" "${N}" "${GREEN}" "${N}"
 }
 D(){ #esquerda
- setas "${N}" "${RED}" "${N}" "${N}"
+	setas "${N}" "${RED}" "${N}" "${N}"
 }
 nulo(){ #nulo
- setas "${N}" "${N}" "${N}" "${N}"
+	setas "${N}" "${N}" "${N}" "${N}"
 }
 p=0;
-i=1;
 TECLA=(F A B C D)
-
-while [ 1 ]; do
- j=1;
- MEM[$i]=`shuf -i 1-4 -n1`
- MEM2[$i]=${TECLA[${MEM[$i]}]}
- for r in $(seq $i); do
-  ${TECLA[${MEM[$r]}]}
-  sleep 0.5
-  nulo
-  sleep 0.1
- done
- sleep 0.5
- while (( $j <= $i )); do
-  nulo
-  read -sn2; read -sn1 DIG[$j];
-  if ! [ ${DIG[$j]} = ${MEM2[$j]} ]; then
-   echo "Game Over! Score: $p"
-   exit 1
-  fi
-  sleep 0.5
- ((j++))
- done
- ((i++))
- ((p++))
+stty -echo
+for ((i=1;;i++)); do
+	j=1;
+	MEM[$i]=`shuf -i 1-4 -n1`
+	MEM2[$i]=${TECLA[${MEM[$i]}]}
+	for r in $(seq $i); do
+		${TECLA[${MEM[$r]}]}
+		sleep 0.5
+		nulo
+		sleep 0.1
+	done
+	sleep 0.5 
+	while (( $j <= $i )); do
+		nulo
+		read -sn2; read -sn1 DIG[$j]
+		if ! [ ${DIG[$j]} = ${MEM2[$j]} ]; then
+			echo "Game Over! Score: $p"
+			stty sane
+			exit $p
+		fi
+		sleep 0.5
+		((j++))
+	done
+	((p++))
 done
