@@ -6,10 +6,10 @@
 #--------------------------------------#
 
 #CORES
-A='\e[96m' #cyan
-B='\e[91m' #red
-C='\e[92m' #green
-D='\e[93m' #yellow
+CYAN='\e[96m' #cyan
+RED='\e[91m' #red
+GREEN='\e[92m' #green
+YELLOW='\e[93m' #yellow
 N='\e[39m' #normal
 
 #FORMAS
@@ -72,49 +72,46 @@ $N
 "
 }
 
-cima(){
-setas "${A}" "${N}" "${N}" "${N}"
+A(){ #cima
+ setas "${CYAN}" "${N}" "${N}" "${N}"
 }
-esquerda(){
-setas "${N}" "${B}" "${N}" "${N}"
+B(){ #baixo
+ setas "${N}" "${N}" "${N}" "${YELLOW}"
 }
-direita(){
-setas "${N}" "${N}" "${C}" "${N}"
+C(){ #direita
+ setas "${N}" "${N}" "${GREEN}" "${N}"
 }
-baixo(){
-setas "${N}" "${N}" "${N}" "${D}"
+D(){ #esquerda
+ setas "${N}" "${RED}" "${N}" "${N}"
 }
-nulo(){
-setas "${N}" "${N}" "${N}" "${N}"
+nulo(){ #nulo
+ setas "${N}" "${N}" "${N}" "${N}"
 }
 p=0;
 i=1;
-SETAS=( " " cima baixo direita esquerda )
-TECLA=( $'\e[F' $'\e[A' $'\e[B' $'\e[C' $'\e[D' )
+TECLA=(F A B C D)
 
 while [ 1 ]; do
  j=1;
- MEM[$i]=`cat /dev/urandom | tr -dc '1-4' | fold -w 1 | head -n 1`
- NUM=${MEM[$i]}
- MEM2[$i]=${TECLA[$NUM]}
-for r in $(seq $i); do
- VERSEQ=${MEM[$r]};
- ${SETAS[$VERSEQ]}
- sleep 0.5
- nulo
- sleep 0.1
-done
- sleep 0.5
- while [ $j -le $i ]; do
+ MEM[$i]=`shuf -i 1-4 -n1`
+ MEM2[$i]=${TECLA[${MEM[$i]}]}
+ for r in $(seq $i); do
+  ${TECLA[${MEM[$r]}]}
+  sleep 0.5
   nulo
-  read  -n3 -s DIG[$j]
-  if ! [[ ${DIG[$j]} = ${MEM2[$j]} ]]; then
-  echo "Game Over! Score: $p"
-  exit 1
+  sleep 0.1
+ done
+ sleep 0.5
+ while (( $j <= $i )); do
+  nulo
+  read -sn2; read -sn1 DIG[$j];
+  if ! [ ${DIG[$j]} = ${MEM2[$j]} ]; then
+   echo "Game Over! Score: $p"
+   exit 1
   fi
   sleep 0.5
- j=$((j+1))
+ ((j++))
  done
-i=$((i+1))
-p=$((p+1))
+ ((i++))
+ ((p++))
 done
