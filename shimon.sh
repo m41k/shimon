@@ -79,21 +79,16 @@ ctrl_c(){
  exit 1;
 }
 
-A(){ #cima
-	setas "${CYAN}" "${N}" "${N}" "${N}"
+pisca(){
+	case $1 in
+		A) setas "${CYAN}" "${N}" "${N}" "${N}" ;;
+		B) setas "${N}" "${N}" "${N}" "${YELLOW}" ;;
+		C) setas "${N}" "${N}" "${GREEN}" "${N}" ;;
+		D) setas "${N}" "${RED}" "${N}" "${N}" ;; 
+		nulo) setas "${N}" "${N}" "${N}" "${N}" ;;
+	esac
 }
-B(){ #baixo
-	setas "${N}" "${N}" "${N}" "${YELLOW}"
-}
-C(){ #direita
-	setas "${N}" "${N}" "${GREEN}" "${N}"
-}
-D(){ #esquerda
-	setas "${N}" "${RED}" "${N}" "${N}"
-}
-nulo(){ #nulo
-	setas "${N}" "${N}" "${N}" "${N}"
-}
+
 p=0;
 TECLA=(F A B C D)
 stty -echo
@@ -102,14 +97,14 @@ for ((i=1;;i++)); do
 	MEM[$i]=`shuf -i 1-4 -n1`
 	MEM2[$i]=${TECLA[${MEM[$i]}]}
 	for r in $(seq $i); do
-		${TECLA[${MEM[$r]}]}
+		pisca ${TECLA[${MEM[$r]}]}
 		sleep 0.5
-		nulo
+		pisca nulo
 		sleep 0.1
 	done
 	sleep 0.5 
-	while (( $j <= $i )); do
-		nulo
+	for ((j=1;j<=$i;j++)); do
+		pisca nulo
 		read -sn2; read -sn1 DIG[$j]
 		if ! [ ${DIG[$j]} = ${MEM2[$j]} ]; then
 			echo "Game Over! Score: $p"
@@ -117,7 +112,6 @@ for ((i=1;;i++)); do
 			exit $p
 		fi
 		sleep 0.5
-		((j++))
 	done
 	((p++))
 done
