@@ -4,15 +4,7 @@
 # CREATED BY: maik.alberto@hotmail.com #
 # ARROWS BY: atcasanova@gmail.com      #
 #--------------------------------------#
-[[ $1 == -s ]] && FazSom=1 || FazSom=0
-#CORES
-CYAN='\e[96m' #cyan
-RED='\e[91m' #red
-GREEN='\e[92m' #green
-YELLOW='\e[93m' #yellow
-N='\e[39m' #normal
 
-<<<<<<< HEAD
 [[ $1 == -s ]] && FazSom=1 || FazSom=0
 
 #CORES
@@ -20,6 +12,7 @@ CYAN='\e[96m' #cyan
 RED='\e[91m' #red
 GREEN='\e[92m' #green
 YELLOW='\e[93m' #yellow
+USER='\e[95m' #magenta
 N='\e[39m' #normal
 
 #FORMAS
@@ -49,7 +42,6 @@ HD4="$LU$RD..$LD$RU" #headup4
 HD5="$LU$RD$LD$RU" #headup5
 BOT="$LU$RU" #fundo
 
-=======
 #FORMAS
 LN="\e(0\x71\e(B" #line
 LU="\e(0\x6d\e(B" #leftup
@@ -77,7 +69,6 @@ HD4="$LU$RD..$LD$RU" #headup4
 HD5="$LU$RD$LD$RU" #headup5
 BOT="$LU$RU" #fundo
 
->>>>>>> 944c9ddeccfbd28bf28ef1d9fbb8d22d869a85d0
 setas(){
 	clear	
 	echo -e "$1
@@ -120,7 +111,6 @@ ctrl_c(){
 
 Som()
 {
-<<<<<<< HEAD
 	(( FazSom )) || return
 	case $1 in
 		A) aplay test.wav &>-  ;;
@@ -130,21 +120,8 @@ Som()
 	esac
 }; export -f Som
 
-pisca(){
-	[[ "$2" == "auto" ]] && auto=1 || auto=0
-=======
-    (( FazSom )) || return
-    case $1 in
-        A) aplay /usr/share/sounds/speech-dispatcher/test.wav &>-  ;;
-        B) aplay /usr/share/sounds/purple/alert.wav           &>-  ;;
-        C) aplay /usr/share/sounds/purple/receive.wav         &>-  ;;
-        D) aplay /usr/share/sounds/purple/send.wav            &>-  ;;
-    esac
-}; export -f Som
-
 
 pisca(){
->>>>>>> 944c9ddeccfbd28bf28ef1d9fbb8d22d869a85d0
 	case $1 in
 		A) setas "${CYAN}" "${N}" "${N}" "${N}" ;;
 		B) setas "${N}" "${N}" "${N}" "${YELLOW}" ;;
@@ -152,26 +129,28 @@ pisca(){
 		D) setas "${N}" "${RED}" "${N}" "${N}" ;; 
 		nulo) setas "${N}" "${N}" "${N}" "${N}" ;;
 	esac
-<<<<<<< HEAD
-	(( auto )) && Som $1
-=======
 	Som $1
->>>>>>> 944c9ddeccfbd28bf28ef1d9fbb8d22d869a85d0
+}
+
+piscauser(){
+	case $1 in
+		A) setas "${USER}" "${N}" "${N}" "${N}" ;;
+		B) setas "${N}" "${N}" "${N}" "${USER}" ;;
+		C) setas "${N}" "${N}" "${USER}" "${N}" ;;
+		D) setas "${N}" "${USER}" "${N}" "${N}" ;; 
+	esac
 }
 
 p=0;
 TECLA=(F A B C D)
 stty -echo
 for ((i=1;;i++)); do
+	pisca nulo
 	j=1;
 	MEM[$i]=`shuf -i 1-4 -n1`
 	MEM2[$i]=${TECLA[${MEM[$i]}]}
 	for r in $(seq $i); do
-<<<<<<< HEAD
-		pisca ${TECLA[${MEM[$r]}]} auto
-=======
-		pisca ${TECLA[${MEM[$r]}]}
->>>>>>> 944c9ddeccfbd28bf28ef1d9fbb8d22d869a85d0
+		pisca ${TECLA[${MEM[$r]}]} 
 		sleep 0.5
 		pisca nulo
 		sleep 0.1
@@ -180,10 +159,7 @@ for ((i=1;;i++)); do
 	for ((j=1;j<=$i;j++)); do
 		pisca nulo
 		read -sn2; read -sn1 DIG[$j]
-<<<<<<< HEAD
-		pisca ${DIG[$j]}
-=======
->>>>>>> 944c9ddeccfbd28bf28ef1d9fbb8d22d869a85d0
+		piscauser ${DIG[$j]};
 		if ! [ ${DIG[$j]} = ${MEM2[$j]} ]; then
 			echo "Game Over! Score: $p"
 			stty sane
