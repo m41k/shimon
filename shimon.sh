@@ -4,7 +4,7 @@
 # CREATED BY: maik.alberto@hotmail.com #
 # ARROWS BY: atcasanova@gmail.com      #
 #--------------------------------------#
-
+[[ $1 == -s ]] && FazSom=1 || FazSom=0
 #CORES
 CYAN='\e[96m' #cyan
 RED='\e[91m' #red
@@ -79,6 +79,18 @@ ctrl_c(){
  exit 1;
 }
 
+Som()
+{
+    (( FazSom )) || return
+    case $1 in
+        A) aplay /usr/share/sounds/speech-dispatcher/test.wav &>-  ;;
+        B) aplay /usr/share/sounds/purple/alert.wav           &>-  ;;
+        C) aplay /usr/share/sounds/purple/receive.wav         &>-  ;;
+        D) aplay /usr/share/sounds/purple/send.wav            &>-  ;;
+    esac
+}; export -f Som
+
+
 pisca(){
 	case $1 in
 		A) setas "${CYAN}" "${N}" "${N}" "${N}" ;;
@@ -87,6 +99,7 @@ pisca(){
 		D) setas "${N}" "${RED}" "${N}" "${N}" ;; 
 		nulo) setas "${N}" "${N}" "${N}" "${N}" ;;
 	esac
+	Som $1
 }
 
 p=0;
